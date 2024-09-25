@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH --nodes 1 --ntasks 16 --mem 64G --out logs/predict.%a.log -a 1
+#SBATCH -N 1 -n 1 -c 16 --mem 64G --out logs/predict.%a.log -a 1
 
 module load funannotate
 module load workspace/scratch
@@ -15,10 +15,10 @@ if [ $SLURM_CPUS_ON_NODE ]; then
     CPU=$SLURM_CPUS_ON_NODE
 fi
 
-INDIR=final_genomes
+INDIR=genome
 OUTDIR=annotation
 SAMPLES=samples.csv
-BUSCODB=sordariomycetes_odb10
+BUSCODB=ascomycota_odb10
 BUSCOSEED=anidulans
 N=${SLURM_ARRAY_TASK_ID}
 
@@ -50,5 +50,5 @@ do
 		--AUGUSTUS_CONFIG_PATH $AUGUSTUS_CONFIG_PATH \
 		--cpus $CPU --min_training_models 50 --max_intronlen 1200 \
 		--name $LOCUS --optimize_augustus \
-		--min_protlen 30 --tmpdir $SCRATCH  --busco_db $BUSCODB
+		--min_protlen 30 --tmpdir $SCRATCH  --busco_db $BUSCODB --header_length 24
 done

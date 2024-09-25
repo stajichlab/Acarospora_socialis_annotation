@@ -4,19 +4,6 @@
 module load funannotate
 export FUNANNOTATE_DB=/bigdata/stajichlab/shared/lib/funannotate_db
 
-CPUS=$SLURM_CPUS_ON_NODE
-module load funannotate
-RNADIR=lib/RNASeq
-
-if [ ! $CPUS ]; then
-    CPUS=2
-fi
-
-
-#!/bin/bash -l
-#SBATCH --nodes 1 --ntasks 24 --mem 128G --out logs/train.%a.log -J trainRhod --time 96:00:00
-
-
 if [ ! $CPUS ]; then
     CPUS=2
 fi
@@ -36,8 +23,9 @@ if [ $N -gt $MAX ]; then
     exit
 fi
 
-INDIR=final_genomes
+INDIR=genome
 OUTDIR=annotation
+RNADIR=lib/RNASeq
 
 IFS=, # set the delimiter to be ,
 tail -n +2 $SAMPLES | sed -n ${N}p | while read NAME SPECIES STRAIN NANOPORE ILLUMINA SUBPHYLUM PHYLUM LOCUS RNASEQ

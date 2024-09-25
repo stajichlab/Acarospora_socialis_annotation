@@ -25,9 +25,9 @@ if [ "$N" -gt "$MAX" ]; then
     exit
 fi
 
-INDIR=final_genomes
+INDIR=genome
 OUTDIR=annotation
-BUSCODB=sordariomycetes_odb10
+BUSCODB=ascomycota_odb10
 SBTTEMPLATE=lib/sbt
 
 IFS=, # set the delimiter to be ,
@@ -36,7 +36,7 @@ do
     name=$NAME
     BASE=$NAME
     SPECIESNOSPACE=$BASE
-    MITO=$INDIR/$SPECIESNOSPACE.mito.fasta
+    #MITO=$INDIR/$SPECIESNOSPACE.mito.fasta
     SBT=$SBTTEMPLATE/$SPECIESNOSPACE.sbt
     if [ ! -f $SBT ]; then
         echo "no SBT file $SBT"
@@ -52,7 +52,7 @@ do
 	ARGS+=(--antismash $ANTISMASH)
     fi 
     if [ -s $MITO  ]; then
-	ARGS+=(--mito $MITO)
+    	ARGS+=(--mito $MITO)
     fi
     funannotate annotate -i $OUTDIR/$BASE --cpus $CPUS --tmpdir $SCRATCH  \
 		--species "$SPECIES" --strain "$STRAIN" --sbt $SBT \

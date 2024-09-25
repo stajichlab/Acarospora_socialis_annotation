@@ -9,7 +9,7 @@ module load funannotate
 RNADIR=lib/RNASeq
 CPUS=$SLURM_CPUS_ON_NODE
 
-if [ ! $CPUS ]; then
+if [ -z $CPUS ]; then
     CPUS=2
 fi
 SAMPLES=samples.csv
@@ -28,7 +28,7 @@ if [ $N -gt $MAX ]; then
     exit
 fi
 
-INDIR=final_genomes
+INDIR=genome
 OUTDIR=annotation
 
 IFS=,
@@ -46,11 +46,11 @@ do
 	if [[ ! -z $LEFT && ! -z $RIGHT ]]; then
 	    # paired end data
 	    funannotate train -i $GENOME --cpus $CPUS --memory $MEM  --species "$SPECIES" --strain $STRAIN  -o $OUTDIR/$BASE --jaccard_clip --max_intronlen 1000 \
-			--left $LEFT --right $RIGHT
+			--left $LEFT --right $RIGHT  --header_length 24
 	elif [ ! -z $LEFT ]; then
 	    # unpaired - single end only
 	    funannotate train -i $GENOME --cpus $CPUS --memory $MEM  --species "$SPECIES" --strain $STRAIN  -o $OUTDIR/$BASE --jaccard_clip  --max_intronlen 1000 \
-			--single $LEFT
+			--single $LEFT  --header_length 24
 	else
 	    echo "No RNASeq files found in '$RNADIR' for '$RNASEQ' - check RNASEQ column in $SAMPLES"
 	    exit
